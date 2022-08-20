@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,14 +23,13 @@ public class Usuario implements Serializable {
 	private Integer id;
 	private String username;
 	private String password;
-	
-	@ManyToMany
+
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
-	  name = "usuario_roles", 
-	  joinColumns = @JoinColumn(name = "usuario_id"),
-	  inverseJoinColumns = @JoinColumn(name = "role_id"),
-	  uniqueConstraints = @UniqueConstraint(columnNames = { "usuario_id", "role_id" })
-	)
+		name = "usuario_roles", //nombre tabla con PKey compuesta
+		joinColumns = @JoinColumn(name = "usuario_id"), //Pk de esta clase (id)
+		inverseJoinColumns = @JoinColumn(name = "role_id"), //Pk de la otra clase (id)
+		uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "role_id" })) //no se puede repitir la id compuesta
 	private List<Role> role;
 
 	public Integer getId() {
@@ -54,6 +54,14 @@ public class Usuario implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public List<Role> getRole() {
+		return role;
+	}
+
+	public void setRole(List<Role> role) {
+		this.role = role;
 	}
 
 	private static final long serialVersionUID = 1L;
