@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,11 @@ public class ControllerCliente {
 	@Autowired
 	private IClienteService clienteService;
 	
+	@GetMapping("/buscar/{id}")
+	public Cliente findById(@PathVariable Integer id) {
+		return clienteService.findById(id);
+	}
+	
 	@GetMapping("/listar")
 	public List<Cliente> listar(){
 		return clienteService.findAll();
@@ -32,6 +40,20 @@ public class ControllerCliente {
 	@PostMapping("/guardar")
 	public Cliente save(@RequestBody Cliente cliente) {
 		return clienteService.save(cliente);
+	}
+	
+	@PutMapping("/editar/{id}")
+	public Cliente edit(@RequestBody Cliente cliente, @PathVariable Integer id) {
+		Cliente foundCliente = clienteService.findById(id);
+		foundCliente.setFullName(cliente.getFullName());
+		foundCliente.setEmail(cliente.getEmail());
+				
+		return clienteService.save(foundCliente);
+	}
+	
+	@DeleteMapping("/eliminar/{id}")
+	public void delete(@PathVariable Integer id) {
+		clienteService.delete(id);
 	}
 	
 	@GetMapping("/micuenta")
