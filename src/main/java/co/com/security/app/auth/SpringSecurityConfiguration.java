@@ -38,6 +38,8 @@ public class SpringSecurityConfiguration {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/api/listar", "/api/micuenta").permitAll()
 				.antMatchers(HttpMethod.POST, "/api/guardar").hasRole("ADMIN")
+				.antMatchers(HttpMethod.PUT, "/api/editar").hasRole("ADMIN")
+				.antMatchers(HttpMethod.DELETE, "/api/eliminar").hasRole("ADMIN")
 				.antMatchers("/auth/**").permitAll()
 				.anyRequest().authenticated()
 				.and().httpBasic()
